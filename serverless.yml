@@ -5,9 +5,8 @@ provider:
   name: aws
   versionFunctions: false
   runtime: nodejs12.x
-  region: ap-southeast-2
+  region: us-east-1
   stage: dev
-  profile: hotpuma
   environment:
     IS_OFFLINE: ${opt:offline}
   apiGateway:
@@ -15,7 +14,6 @@ provider:
       - "application/pdf"
 plugins:
   - serverless-webpack
-  - serverless-domain-manager
   - serverless-offline
 
 layers:
@@ -37,12 +35,6 @@ custom:
   serverless-offline:
     location: .webpack/service
 
-  customDomain:
-    domainName: labs.mianio.com
-    basePath: demo
-    stage: ${self:provider.stage}
-    createRoute53Record: true
-
 functions:
   generate-the-pdf:
     provisionedConcurrency: 2
@@ -51,6 +43,6 @@ functions:
       - { Ref: HeadlessChromeLambdaLayer }
     events:
       - http:
-          path: puppeteer/pdf
+          path: pdf
           method: get
           cors: true
